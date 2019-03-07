@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +12,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::namespace('api')->group(function() {
+Route::namespace('api')->middleware('cors')->group(function() {
     Route::resource('products', 'ProductController');
     Route::resource('categories', 'CategoriesController');
     Route::resource('orders', 'OrdersController');
