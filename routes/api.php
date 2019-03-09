@@ -14,7 +14,7 @@
 
 Route::namespace('api')->middleware('cors')->group(function() {
     Route::resource('products', 'ProductController');
-    Route::resource('categories', 'CategoriesController');
+    Route::resource('categories', 'CategoryController');
     Route::resource('orders', 'OrdersController');
 });
 

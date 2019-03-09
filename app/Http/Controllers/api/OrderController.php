@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
-use App\Product;
+use App\Order;
+use App\OrderProduct;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::get();
+        return Order::with('orderProduct')->get();
     }
 
     /**
@@ -35,9 +36,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        Product::insert($request->all());
-        $product = Product::orderBy('id','desc')->first();
-        return $product;
+        Order::insert($request->only(['date_ordered', 'user_id']));
+        foreach($request->input('orders_products') as $orderProduct) {
+            OrderProduct::insert($orderProduct);
+        }
+        $order = Order::orderBy('id', 'desc')->first();
+        return $order;
     }
 
     /**
@@ -48,7 +52,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return Product::find($id);
+        return Order::find($id);
     }
 
     /**
@@ -71,8 +75,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Product::find($id)->update($request->all());
-        return $request->all();   
+        Order::find($id)->update($request->all());
+        return $request->all();
     }
 
     /**
@@ -83,9 +87,9 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        Product::find($id)->delete();
+        Order::find($id)->delete();
         return json_encode([
-            'message' => 'Product Successfully deleted!'
+            'message' => 'Order Successfully deleted!'
         ]);
     }
 }

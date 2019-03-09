@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
 use Illuminate\Http\Request;
 use App\Category;
 
-class ProductController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,12 +31,11 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         Category::insert($request->all());
-        $category = Product::orderBy('id', 'desc')->first();
+        $category = Category::orderBy('id', 'desc')->first();
         return $category;
     }
 
@@ -71,7 +70,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Category::find($id)->update($request->all());
+        Category::where('id', $id)->update($request->except(['id']));
         return $request->all();
     }
 
@@ -83,7 +82,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        Category::find($id)->delete();
+        Category::where('id', $id)->delete();
         return json_encode([
             'message' => 'Category Successfully deleted!'
         ]);
